@@ -139,7 +139,7 @@
 </main>
 <footer id="foot"></footer>
 <script>
-const VERSION = "2026-10-05-3";
+const VERSION = "2026-10-05-4";
 const ENDPOINT = "https://formsubmit.co/ajax/gbpay365@gmail.com";
 const CLASSIC = "https://formsubmit.co/gbpay365@gmail.com";
 
@@ -242,7 +242,6 @@ const SECTIONS = [
         opt("boutique", "Boutique", "Product shop"),
         opt("caisse", "Caisse", "Cashier"),
         opt("stock", "Stock / production", "Stock / production"),
-        opt("seminaires", "Séminaires et formation", "Seminars and teaching"),
         opt("other", "Autre", "Other")
       ]}),
       q("role_other", "text", "Précisez la fonction", "Describe the role", { required: true, showIf: { id: "role", equals: "other" } }),
@@ -270,7 +269,6 @@ const SECTIONS = [
         opt("boutique", "Boutique", "Shop"),
         opt("caisse", "Argent et caisse", "Money and cashier"),
         opt("stock", "Stock", "Stock"),
-        opt("seminaires", "Séminaires", "Seminars"),
         opt("dossiers", "Dossiers des bénéficiaires", "Beneficiary files"),
         opt("direction", "Direction et rapports", "Management and reports")
       ]})
@@ -293,7 +291,6 @@ const SECTIONS = [
       q("what", "multi", "Aujourd'hui, LFD fait quoi ?", "What does LFD do today?", { required: true, options: [
         opt("consult", "Consultations", "Consultations"),
         opt("shop", "Vente de produits naturels", "Natural product sales"),
-        opt("seminar", "Séminaires ou formation", "Seminars or teaching"),
         opt("delivery", "Livraison", "Delivery"),
         opt("inpatient", "Hospitalisation / lits", "Admission / beds"),
         opt("emergency", "Urgences", "Emergency"),
@@ -321,7 +318,6 @@ const SECTIONS = [
         opt("shop", "Boutique", "Shop"),
         opt("cashier", "Caisse", "Cash desk"),
         opt("stock", "Stock", "Stock"),
-        opt("seminar", "Séminaires", "Seminars"),
         opt("other", "Autre", "Other")
       ]}),
       q("posts_other", "text", "Autre poste", "Other post", { showIf: { id: "posts", includes: "other" } }),
@@ -369,7 +365,6 @@ const SECTIONS = [
         opt("all", "Toute personne qui entre", "Everyone who comes in"),
         opt("consult", "Seulement ceux qui consultent", "Only people who consult"),
         opt("shop", "Les acheteurs de la boutique aussi", "Shop buyers as well"),
-        opt("seminar", "Les abonnés aux séminaires", "Seminar subscribers"),
         opt("family", "La famille autour d'une personne", "The family around a person"),
         opt("group", "Un groupe, une église ou une entreprise", "A group, church, or company")
       ]}),
@@ -464,7 +459,6 @@ const SECTIONS = [
         opt("buy", "Acheter des produits", "To buy products"),
         opt("consult", "Consulter", "To consult"),
         opt("follow", "Venir au suivi", "A follow-up visit"),
-        opt("seminar", "Séminaire ou enseignement", "Seminar or teaching"),
         opt("pickup", "Récupérer une commande", "To collect an order"),
         opt("emergency", "Urgence", "Emergency"),
         opt("other", "Autre", "Other")
@@ -648,7 +642,6 @@ const SECTIONS = [
       q("followup", "multi", "Comment le suivi est-il enregistré après la visite ?", "How is follow-up recorded after the visit?", { options: [
         opt("date", "Une date de retour est écrite sur le passage", "A return date is written on the visit"),
         opt("task", "Une tâche est laissée au personnel", "A task is left for staff"),
-        opt("seminar", "Le suivi passe par le séminaire", "Follow-up goes through the seminar"),
         opt("none", "Rien n'est enregistré : la personne revient si elle veut", "Nothing is recorded: the person returns if they want"),
         opt("other", "Autre", "Other")
       ]}),
@@ -672,7 +665,6 @@ const SECTIONS = [
         opt("counter", "Comptoir du centre", "Centre counter"),
         opt("consult", "À la fin de la consultation", "At the end of the consultation"),
         opt("delivery", "Livraison", "Delivery"),
-        opt("seminar", "Pendant un séminaire", "During a seminar"),
         opt("other", "Autre", "Other")
       ]}),
       q("channels_other", "text", "Autre point de vente", "Other sales point", { showIf: { id: "channels", includes: "other" } }),
@@ -755,30 +747,6 @@ const SECTIONS = [
       q("low_stock", "long", "Comment savez-vous qu'un produit manque, et qui décide d'en refaire ou d'en racheter ?", "How do you know a product is running out, and who decides to make or buy more?"),
       q("delivery", "long", "Livraison : quelles zones, quel prix, et qui encaisse ?", "Delivery: which areas, what price, and who collects the money?"),
       q("returns", "long", "Que faites-vous d'un produit retourné, périmé ou abîmé ?", "What do you do with a returned, expired, or damaged product?")
-    ]
-  },
-  {
-    id: "seminars",
-    canSkip: true,
-    fr: { title: "Séminaires", lead: "Un séminaire est un abonnement : une période, un prix, et ce à quoi il donne droit. Dites comment le système doit le suivre." },
-    en: { title: "Seminars", lead: "A seminar is a subscription: a period, a price, and what it entitles the person to. Say how the system should track it." },
-    questions: [
-      q("plans_real", "single", "Les formules 3 000 FCFA par semaine, 10 000 par mois et 100 000 par an sont-elles proposées aujourd'hui ?", "Are the plans of 3,000 FCFA a week, 10,000 a month, and 100,000 a year offered today?", { required: true, options: [
-        opt("yes", "Oui, les trois", "Yes, all three"),
-        opt("some", "Seulement certaines", "Only some of them"),
-        opt("other_price", "Il y a des séminaires, à d'autres prix", "There are seminars, at other prices"),
-        opt("no", "Non", "No"),
-        UNK()
-      ]}),
-      q("plans_note", "long", "Que comprend une formule : présence, produits, consultation, autre chose ?", "What does a plan include: attendance, products, a consultation, something else?"),
-      q("file_link", "single", "L'abonné a-t-il aussi un dossier de bénéficiaire ?", "Does the subscriber also have a beneficiary file?", { options: [
-        opt("yes", "Oui", "Yes"),
-        opt("no", "Non", "No"),
-        opt("if_consult", "Seulement s'il consulte", "Only if they consult"),
-        UNK()
-      ]}),
-      q("pay_track", "long", "Comment le paiement est-il suivi, et que se passe-t-il si la personne arrête ?", "How is payment tracked, and what happens if the person stops?"),
-      q("other_programmes", "long", "Autres programmes : groupes, églises, entreprises, journées spéciales", "Other programmes: groups, churches, companies, special days")
     ]
   },
   {
@@ -984,8 +952,8 @@ const SECTIONS = [
   {
     id: "money",
     canSkip: true,
-    fr: { title: "Argent", lead: "La caisse doit suivre la consultation, la boutique, les séminaires et les dettes, en FCFA." },
-    en: { title: "Money", lead: "The cash desk needs to follow consultations, the shop, seminars, and debts, in FCFA." },
+    fr: { title: "Argent", lead: "La caisse doit suivre la consultation, la boutique, le laboratoire, l'imagerie, l'hospitalisation et les dettes, en FCFA." },
+    en: { title: "Money", lead: "The cash desk needs to follow consultations, the shop, the laboratory, imaging, hospitalisation, and debts, in FCFA." },
     questions: [
       q("who_pays", "multi", "Qui paie ?", "Who pays?", { options: [
         opt("person", "Le bénéficiaire", "The beneficiary"),
@@ -1020,7 +988,6 @@ const SECTIONS = [
         opt("lab", "Laboratoire", "Laboratory"),
         opt("imaging", "Imagerie", "Imaging"),
         opt("stay", "Hospitalisation", "Hospitalisation"),
-        opt("seminar", "Séminaire", "Seminar"),
         opt("other", "Autre", "Other")
       ]}),
       q("bill_lines_other", "text", "Autre ligne de compte", "Other bill line", { showIf: { id: "bill_lines", includes: "other" } }),
@@ -1112,7 +1079,6 @@ const SECTIONS = [
         opt("income", "Recettes", "Income"),
         opt("debt", "Dettes", "Debts"),
         opt("late", "Suivis en retard", "Overdue follow-ups"),
-        opt("seminar", "Séminaires", "Seminars"),
         opt("other", "Autre", "Other")
       ]}),
       q("reports_other", "text", "Autre rapport", "Other report", { showIf: { id: "reports", includes: "other" } }),
@@ -1198,7 +1164,6 @@ function dayOne() {
     opt("products", "Produits recommandés", "Recommended products"),
     opt("cashier", "Caisse", "Cash desk"),
     opt("stock", "Stock de la boutique", "Shop stock"),
-    opt("seminar", "Séminaires", "Seminars"),
     opt("reports", "Rapports", "Reports")
   ];
 }
