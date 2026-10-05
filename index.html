@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1e3d32">
+<title>LFD Services — Questionnaire de fonctionnement</title>
+<style>
+  :root {
+    --ink: #1c2420;
+    --forest: #1e3d32;
+    --leaf: #2c6b4a;
+    --cream: #f3eee4;
+    --paper: #fffdf9;
+    --line: #e4d9c8;
+    --clay: #a65332;
+    --muted: #5d675f;
+    --soft: #e7f2eb;
+    --warn: #8a3d22;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 400px at 10% -10%, #e7f0e4 0%, transparent 50%),
+      var(--cream);
+    line-height: 1.45;
+  }
+  header {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 14px 22px;
+    background: rgba(255, 253, 249, 0.92);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+  }
+  .brand { display: flex; gap: 12px; align-items: center; }
+  .mark {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--forest); color: #f3eee4;
+    display: grid; place-items: center; font-family: Georgia, serif; font-weight: 700;
+  }
+  .brand b { display: block; font-family: Georgia, "Palatino Linotype", serif; font-size: 18px; letter-spacing: 0.01em; }
+  .brand span { color: var(--muted); font-size: 12px; }
+  .langs { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .langs button {
+    border: 0; background: transparent; padding: 8px 12px; cursor: pointer; color: var(--muted);
+  }
+  .langs button.on { background: var(--forest); color: white; }
+  main { max-width: 980px; margin: 0 auto; padding: 22px 16px 64px; display: grid; grid-template-columns: 230px 1fr; gap: 18px; }
+  nav {
+    position: sticky; top: 78px; align-self: start;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 10px;
+  }
+  nav button {
+    width: 100%; text-align: left; border: 0; background: transparent;
+    padding: 8px 10px; border-radius: 10px; cursor: pointer; color: var(--muted); font-size: 13px;
+  }
+  nav button.on { background: var(--soft); color: var(--forest); font-weight: 650; }
+  nav button small { display: block; color: var(--muted); font-weight: 500; }
+  article {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+    padding: 26px 22px 20px; box-shadow: 0 10px 30px rgba(30, 61, 50, 0.04);
+  }
+  .kicker { color: var(--leaf); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin: 0 0 6px; }
+  h1, h2 { font-family: Georgia, "Palatino Linotype", serif; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+  h1 { font-size: 34px; line-height: 1.15; }
+  h2 { font-size: 28px; }
+  .lead { color: #3e4943; margin: 0 0 18px; }
+  .note, .banner {
+    background: #f7f3ea; border-left: 3px solid var(--leaf); padding: 10px 12px; border-radius: 8px; margin: 0 0 16px; color: #314038;
+  }
+  .warn { background: #fbf1ec; border-left-color: var(--clay); }
+  fieldset { border: 0; margin: 0 0 16px; padding: 0; }
+  legend, .qlabel { font-weight: 650; display: block; margin-bottom: 4px; }
+  .hint { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+  .req { color: var(--clay); }
+  .choices { display: grid; gap: 8px; }
+  .choice {
+    display: flex; gap: 10px; align-items: flex-start;
+    border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: white; cursor: pointer;
+  }
+  .choice:has(input:checked) { border-color: var(--leaf); background: var(--soft); }
+  .choice input { margin-top: 3px; }
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: inherit; background: white;
+  }
+  textarea { min-height: 110px; resize: vertical; }
+  .compact { margin-bottom: 10px; }
+  .compact .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .skip {
+    display: flex; gap: 8px; align-items: center; margin: 0 0 14px; color: var(--muted);
+  }
+  .error { color: var(--warn); font-size: 13px; margin-top: 6px; }
+  .row { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+  button.btn {
+    border: 0; border-radius: 999px; padding: 12px 18px; font: inherit; cursor: pointer;
+  }
+  button.primary { background: var(--forest); color: white; }
+  button.ghost { background: transparent; color: var(--forest); }
+  button.btn:disabled { opacity: 0.55; cursor: wait; }
+  .review section { border-top: 1px solid var(--line); padding: 12px 0; }
+  .review h3 { margin: 0 0 6px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .review p { margin: 4px 0; }
+  .review b { font-weight: 650; }
+  .progress { height: 6px; background: var(--line); border-radius: 99px; margin: 12px 0 18px; overflow: hidden; }
+  .progress span { display: block; height: 100%; background: var(--leaf); }
+  footer { max-width: 980px; margin: -40px auto 30px; padding: 0 16px 0 262px; color: var(--muted); font-size: 12px; }
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    nav { position: static; display: flex; gap: 6px; overflow: auto; }
+    nav button { width: auto; white-space: nowrap; }
+    nav button small { display: none; }
+    footer { padding-left: 16px; }
+    h1 { font-size: 28px; }
+    .compact .choices { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="mark">L</div>
+    <div>
+      <b>(LFD) Services</b>
+      <span id="tagline">Living Food · Douala</span>
+    </div>
+  </div>
+  <div class="langs" role="group" aria-label="Language">
+    <button type="button" id="lang-fr" class="on">FR</button>
+    <button type="button" id="lang-en">EN</button>
+  </div>
+</header>
+<main>
+  <nav id="nav" aria-label="Sections"></nav>
+  <article id="stage"></article>
+</main>
+<footer id="foot"></footer>
+<script>
+const VERSION = "2026-10-05";
+const ENDPOINT = "https://formsubmit.co/ajax/gbpay365@gmail.com";
+const CLASSIC = "https://formsubmit.co/gbpay365@gmail.com";
+
+const T = {
+  fr: {
+    tagline: "Living Food · Douala",
+    foot: "Questionnaire interne pour décrire le fonctionnement. N'écrivez aucun nom, téléphone ou diagnostic d'un bénéficiaire réel.",
+    startKicker: "Le Boulevard pour la Santé Optimale",
+    startTitle: "Comment LFD Services fonctionne vraiment",
+    startLead: "Ce questionnaire sert à construire le système qui suivra les bénéficiaires, les consultations et la boutique. Comptez 30 à 40 minutes. Une personne qui connaît tout le centre peut tout remplir. Sinon, chaque service remplit ce qu'il connaît.",
+    seenTitle: "Ce que les sites montrent déjà",
+    seen: "La boutique lfdstableproductshop.com vend des produits naturels à Douala, vers Rue Lendi, après le fin goudron à Mbangue (Chips Vital, Vital Buccal Care, et d'autres). Le site lfdservice.org ajoute Vital Food, Vital Fufu, des commandes WhatsApp, des rendez-vous et des séminaires à 3 000, 10 000 et 100 000 FCFA. Il décrit aussi un grand hôpital, avec urgences et chambres. Dites ce qui est vrai aujourd'hui, ce qui est prévu, et ce qui ne vous concerne pas.",
+    privacy: "Décrivez les étapes, les rôles et les prix. Laissez de côté les identités et les dossiers médicaux des personnes réelles. Vos réponses sont envoyées à la personne qui construit le système. Elles ne sont pas publiées.",
+    continue: "Continuer le brouillon",
+    restart: "Recommencer",
+    begin: "Commencer",
+    step: "Partie",
+    of: "sur",
+    skip: "Passer cette partie — je ne la connais pas assez",
+    back: "Retour",
+    next: "Continuer",
+    review: "Vérifier et envoyer",
+    required: "Réponse nécessaire pour continuer.",
+    other: "Précisez",
+    edit: "Modifier",
+    skipped: "Partie passée",
+    empty: "Sans réponse",
+    send: "Envoyer les réponses",
+    sending: "Envoi…",
+    consent: "Je décris le fonctionnement de LFD. Je n'ai pas écrit l'identité ni le dossier médical d'un bénéficiaire réel.",
+    consentNeed: "Cochez la confirmation avant l'envoi.",
+    thanksTitle: "Réponses envoyées",
+    thanks: "Merci. Ces réponses serviront à dessiner le système de gestion des bénéficiaires, de la consultation et de la boutique.",
+    download: "Télécharger une copie",
+    copy: "Copier le résumé",
+    copied: "Résumé copié",
+    fail: "L'envoi en ligne n'a pas abouti. Téléchargez la copie, ou utilisez l'envoi de secours. Si un message demande d'activer le formulaire, la personne qui a créé ce lien doit d'abord ouvrir le mail FormSubmit.",
+    fallback: "Envoi de secours",
+    draft: "Un brouillon est enregistré sur cet appareil.",
+    unknown: "Je ne sais pas"
+  },
+  en: {
+    tagline: "Living Food · Douala",
+    foot: "Internal questionnaire about how the centre works. Do not enter a real beneficiary's name, phone number, or diagnosis.",
+    startKicker: "The road to optimal health",
+    startTitle: "How LFD Services actually works",
+    startLead: "These answers will shape the system for beneficiaries, consultations, and the product shop. Allow 30 to 40 minutes. Someone who knows the whole centre can complete every part. Otherwise each department answers what it knows.",
+    seenTitle: "What the public sites already show",
+    seen: "The shop at lfdstableproductshop.com sells natural products in Douala, towards Rue Lendi, after the end of the tar at Mbangue (Vital Chips, Vital Buccal Care, and others). lfdservice.org also lists Vital Food, Vital Fufu, WhatsApp orders, appointments, and seminars at 3,000, 10,000 and 100,000 FCFA. It also describes a large hospital, with emergency care and rooms. Say what is true today, what is planned, and what does not apply.",
+    privacy: "Describe steps, roles, and prices. Leave out the identities and medical files of real people. Your answers are sent to the person building the system. They are not published.",
+    continue: "Continue the draft",
+    restart: "Start over",
+    begin: "Start",
+    step: "Part",
+    of: "of",
+    skip: "Skip this part — I do not know it well enough",
+    back: "Back",
+    next: "Continue",
+    review: "Review and send",
+    required: "An answer is needed before continuing.",
+    other: "Please specify",
+    edit: "Edit",
+    skipped: "Part skipped",
+    empty: "No answer",
+    send: "Send answers",
+    sending: "Sending…",
+    consent: "I am describing how LFD works. I have not written the identity or medical file of a real beneficiary.",
+    consentNeed: "Tick the confirmation before sending.",
+    thanksTitle: "Answers sent",
+    thanks: "Thank you. These answers will be used to design the system for beneficiaries, consultations, and the shop.",
+    download: "Download a copy",
+    copy: "Copy the summary",
+    copied: "Summary copied",
+    fail: "Online sending did not succeed. Download the copy, or use the backup send. If a message asks to activate the form, the person who created this link must open the FormSubmit email first.",
+    fallback: "Backup send",
+    draft: "A draft is saved on this device.",
+    unknown: "I don't know"
+  }
+};
+
+const opt = (value, fr, en) => ({ value, fr, en });
+const UNK = () => opt("unknown", "Je ne sais pas", "I don't know");
+
+const SECTIONS = [
+  {
+    id: "person",
+    fr: { title: "Qui répond", lead: "Pour savoir à qui revenir si une réponse doit être précisée." },
+    en: { title: "Who is answering", lead: "So we know who to ask if an answer needs clarifying." },
+    questions: [
+      q("name", "text", "Nom et prénom", "Full name", { required: true }),
+      q("email", "email", "Adresse e-mail", "Email address", { frHint: "Facultatif. Sert seulement à vous recontacter.", enHint: "Optional. Used only to contact you." }),
+      q("role", "single", "Votre fonction principale", "Your main role", { required: true, options: [
+        opt("direction", "Direction", "Management"),
+        opt("accueil", "Accueil", "Reception"),
+        opt("constantes", "Prise des constantes", "Vitals"),
+        opt("consultation", "Médecin ou consultant", "Doctor or consultant"),
+        opt("boutique", "Boutique", "Product shop"),
+        opt("caisse", "Caisse", "Cashier"),
+        opt("stock", "Stock / production", "Stock / production"),
+        opt("seminaires", "Séminaires et formation", "Seminars and teaching"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("role_other", "text", "Précisez la fonction", "Describe the role", { required: true, showIf: { id: "role", equals: "other" } }),
+      q("site", "single", "Où travaillez-vous le plus souvent ?", "Where do you work most often?", { required: true, options: [
+        opt("lendi", "Douala, vers Rue Lendi / fin goudron Mbangue", "Douala, towards Rue Lendi / end of tar at Mbangue"),
+        opt("other_site", "Un autre lieu", "Another place"),
+        opt("several", "Plusieurs lieux", "Several places"),
+        opt("online", "Surtout en ligne ou par téléphone", "Mostly online or by phone")
+      ]}),
+      q("site_other", "text", "Quel lieu ?", "Which place?", { showIf: { id: "site", equals: "other_site" } }),
+      q("phone", "tel", "WhatsApp professionnel", "Work WhatsApp", { frHint: "Facultatif.", enHint: "Optional." }),
+      q("years", "single", "Depuis combien de temps êtes-vous à LFD ?", "How long have you been at LFD?", { options: [
+        opt("lt1", "Moins d'un an", "Less than a year"),
+        opt("1to3", "1 à 3 ans", "1 to 3 years"),
+        opt("3to7", "3 à 7 ans", "3 to 7 years"),
+        opt("gt7", "Plus de 7 ans", "More than 7 years"),
+        UNK()
+      ]}),
+      q("areas", "multi", "Quelles parties connaissez-vous bien ?", "Which parts do you know well?", { required: true, options: [
+        opt("accueil", "Accueil", "Reception"),
+        opt("constantes", "Constantes", "Vitals"),
+        opt("consultation", "Consultation", "Consultation"),
+        opt("boutique", "Boutique", "Shop"),
+        opt("caisse", "Argent et caisse", "Money and cashier"),
+        opt("stock", "Stock", "Stock"),
+        opt("seminaires", "Séminaires", "Seminars"),
+        opt("dossiers", "Dossiers des bénéficiaires", "Beneficiary files"),
+        opt("direction", "Direction et rapports", "Management and reports")
+      ]})
+    ]
+  },
+  {
+    id: "org",
+    canSkip: true,
+    fr: { title: "L'organisation", lead: "Pour caler le système sur les lieux, les horaires et ce que LFD est aujourd'hui." },
+    en: { title: "The organisation", lead: "So the system matches the places, hours, and what LFD is today." },
+    questions: [
+      q("names", "multi", "Quels noms utilisez-vous vraiment ?", "Which names do you actually use?", { options: [
+        opt("lfd", "LFD Services ou (LFD)-Services", "LFD Services or (LFD)-Services"),
+        opt("living", "Living Food", "Living Food"),
+        opt("mega", "Mega Centre / Optimal Healthcare", "Mega Centre / Optimal Healthcare"),
+        opt("shop", "LFD Product Shop", "LFD Product Shop"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("names_other", "text", "Autre nom", "Other name", { showIf: { id: "names", includes: "other" } }),
+      q("what", "multi", "Aujourd'hui, LFD fait quoi ?", "What does LFD do today?", { required: true, options: [
+        opt("consult", "Consultations", "Consultations"),
+        opt("shop", "Vente de produits naturels", "Natural product sales"),
+        opt("seminar", "Séminaires ou formation", "Seminars or teaching"),
+        opt("delivery", "Livraison", "Delivery"),
+        opt("inpatient", "Hospitalisation / lits", "Admission / beds"),
+        opt("emergency", "Urgences", "Emergency"),
+        opt("production", "Fabrication des produits", "Making the products"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("what_other", "text", "Autre activité", "Other activity", { showIf: { id: "what", includes: "other" } }),
+      q("sites_count", "single", "Combien de lieux reçoivent des bénéficiaires ?", "How many places receive beneficiaries?", { options: [
+        opt("1", "Un seul", "One"),
+        opt("2", "Deux", "Two"),
+        opt("3plus", "Trois ou plus", "Three or more"),
+        opt("online", "Pas de lieu fixe", "No fixed place"),
+        UNK()
+      ]}),
+      q("addresses", "long", "Adresses et téléphones de chaque lieu", "Address and phone of each place", { frHint: "Un lieu par ligne.", enHint: "One place per line." }),
+      q("hours_consult", "text", "Horaires des consultations", "Consultation hours"),
+      q("hours_shop", "text", "Horaires de la boutique", "Shop hours"),
+      q("emergency", "single", "Y a-t-il un service d'urgence ?", "Is there an emergency service?", { frHint: "Le site parle d'urgences 24h/24. Confirmez ce qui est vrai.", enHint: "The website mentions 24/7 emergency care. Confirm what is true.", options: [
+        opt("none", "Non", "No"),
+        opt("day", "Oui, aux heures d'ouverture", "Yes, during opening hours"),
+        opt("24h", "Oui, 24h/24", "Yes, 24 hours"),
+        opt("planned", "Pas encore, c'est prévu", "Not yet, it is planned"),
+        UNK()
+      ]}),
+      q("languages", "multi", "Langues parlées avec les bénéficiaires", "Languages spoken with beneficiaries", { options: [
+        opt("fr", "Français", "French"),
+        opt("en", "Anglais", "English"),
+        opt("duala", "Duala", "Duala"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("languages_other", "text", "Autre langue", "Other language", { showIf: { id: "languages", includes: "other" } }),
+      q("community", "single", "Un groupe, une église ou une communauté fait-il partie du parcours ?", "Does a group, church, or community take part in the journey?", { options: [
+        opt("no", "Non", "No"),
+        opt("yes", "Oui, souvent", "Yes, often"),
+        opt("sometimes", "Parfois", "Sometimes"),
+        UNK()
+      ]}),
+      q("community_note", "long", "Comment ce groupe intervient-il ?", "How does that group take part?", { showIf: { id: "community", equalsAny: ["yes", "sometimes"] } }),
+      q("phones", "multi", "Quels numéros sont vraiment utilisés ?", "Which phone numbers are actually used?", { options: [
+        opt("674", "+237 674 766 946", "+237 674 766 946"),
+        opt("671", "+237 671 83 60 02", "+237 671 83 60 02"),
+        opt("other", "Un autre numéro", "Another number"),
+        UNK()
+      ]}),
+      q("phones_other", "text", "Autre numéro", "Other number", { showIf: { id: "phones", includes: "other" } }),
+      q("channels", "multi", "Quels canaux sont vraiment utilisés ?", "Which channels are actually used?", { options: [
+        opt("counter", "Au centre, en personne", "At the centre, in person"),
+        opt("shop_site", "Boutique en ligne lfdstableproductshop.com", "Online shop lfdstableproductshop.com"),
+        opt("clinic_site", "Site lfdservice.org", "Website lfdservice.org"),
+        opt("whatsapp", "WhatsApp", "WhatsApp"),
+        opt("facebook", "Facebook", "Facebook"),
+        opt("youtube", "YouTube", "YouTube"),
+        opt("phone", "Appel téléphonique", "Phone call")
+      ]}),
+      q("facebook_url", "text", "Lien de la page Facebook, s'il y en a une", "Facebook page link, if there is one"),
+      q("volume", "single", "Combien de personnes viennent un jour ordinaire, boutique et consultation ensemble ?", "On an ordinary day, how many people come, shop and consultation together?", { options: ranges() }),
+      q("consults_per_day", "single", "Combien de consultations par jour ?", "How many consultations per day?", { options: ranges() }),
+      q("approver", "text", "Qui doit valider le futur système ? Nom et fonction", "Who must approve the future system? Name and role")
+    ]
+  },
+  {
+    id: "beneficiaries",
+    canSkip: true,
+    fr: { title: "Les bénéficiaires", lead: "Le système dira « bénéficiaire ». Dites qui est enregistré, et quelles informations ouvrent un dossier." },
+    en: { title: "Beneficiaries", lead: "The system will say “beneficiary”. Say who gets a file, and which details open it." },
+    questions: [
+      q("word", "single", "Quel mot utilisez-vous au quotidien ?", "Which word do you use day to day?", { required: true, options: [
+        opt("beneficiaire", "Bénéficiaire", "Beneficiary"),
+        opt("patient", "Patient", "Patient"),
+        opt("client", "Client", "Customer"),
+        opt("membre", "Membre", "Member"),
+        opt("several", "Plusieurs mots, selon la situation", "Several words, depending on the situation"),
+        UNK()
+      ]}),
+      q("who", "multi", "Qui doit avoir un dossier ?", "Who should have a file?", { options: [
+        opt("all", "Toute personne qui entre", "Everyone who comes in"),
+        opt("consult", "Seulement ceux qui consultent", "Only people who consult"),
+        opt("shop", "Les acheteurs de la boutique aussi", "Shop buyers as well"),
+        opt("seminar", "Les abonnés aux séminaires", "Seminar subscribers"),
+        opt("family", "La famille autour d'une personne", "The family around a person"),
+        opt("group", "Un groupe, une église ou une entreprise", "A group, church, or company")
+      ]}),
+      q("same_record", "single", "Un achat en boutique et une consultation sont-ils le même dossier ?", "Are a shop purchase and a consultation the same file?", { required: true, options: [
+        opt("same", "Oui, une seule fiche", "Yes, one file"),
+        opt("separate", "Non, deux suivis séparés", "No, two separate records"),
+        opt("link", "Deux actions, reliées à la même personne", "Two actions, linked to the same person"),
+        UNK()
+      ]}),
+      q("fields", "multi", "Quelles informations prenez-vous à l'arrivée ?", "Which details do you take on arrival?", { options: [
+        opt("name", "Nom", "Name"),
+        opt("sex", "Sexe", "Sex"),
+        opt("age", "Âge ou date de naissance", "Age or date of birth"),
+        opt("phone", "Téléphone / WhatsApp", "Phone / WhatsApp"),
+        opt("quarter", "Quartier ou adresse", "Neighbourhood or address"),
+        opt("id", "Pièce d'identité", "Identity document"),
+        opt("photo", "Photo", "Photo"),
+        opt("kin", "Personne à contacter", "Person to contact"),
+        opt("work", "Profession", "Occupation"),
+        opt("group", "Église, groupe ou entreprise", "Church, group, or company"),
+        opt("language", "Langue", "Language"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("fields_other", "text", "Autre information", "Other detail", { showIf: { id: "fields", includes: "other" } }),
+      q("file_number", "single", "Existe-t-il déjà un numéro de dossier ?", "Is there already a file number?", { options: [
+        opt("manual", "Oui, écrit à la main", "Yes, written by hand"),
+        opt("book", "Oui, un numéro de cahier ou de page", "Yes, a notebook or page number"),
+        opt("none", "Non", "No"),
+        UNK()
+      ]}),
+      q("file_how", "long", "Comment le numéro est-il créé, et que fait-on si la personne revient ?", "How is the number created, and what happens when the person returns?", { showIf: { id: "file_number", equalsAny: ["manual", "book"] } }),
+      q("first_visit", "multi", "Où est ouvert le premier dossier aujourd'hui ?", "Where is the first file opened today?", { options: [
+        opt("paper", "Fiche papier", "Paper form"),
+        opt("book", "Cahier ou registre", "Notebook or register"),
+        opt("excel", "Excel ou ordinateur", "Excel or a computer"),
+        opt("whatsapp", "WhatsApp", "WhatsApp"),
+        opt("memory", "Dans la mémoire du personnel", "In staff memory"),
+        opt("none", "On n'ouvre pas de dossier", "No file is opened")
+      ]}),
+      q("family", "single", "Un dossier peut-il couvrir une famille ?", "Can one file cover a family?", { options: [
+        opt("no", "Non, une personne par dossier", "No, one person per file"),
+        opt("yes", "Oui", "Yes"),
+        opt("sometimes", "Parfois", "Sometimes"),
+        UNK()
+      ]}),
+      q("family_note", "long", "Comment la famille est-elle notée ?", "How is the family recorded?", { showIf: { id: "family", equalsAny: ["yes", "sometimes"] } }),
+      q("chronic", "single", "Notez-vous les maladies de longue durée sur le dossier ?", "Do you record long-term conditions on the file?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("no", "Non", "No"),
+        opt("sometimes", "Parfois, si la personne en parle", "Sometimes, if the person mentions it"),
+        UNK()
+      ]}),
+      q("chronic_which", "long", "Lesquelles reviennent le plus souvent ?", "Which ones come up most often?", { frHint: "Par exemple diabète, tension, digestion. Sans nom de personne.", enHint: "For example diabetes, blood pressure, digestion. No person's name.", showIf: { id: "chronic", equalsAny: ["yes", "sometimes"] } }),
+      q("who_reads", "multi", "Qui a le droit de lire un dossier ?", "Who may read a file?", { options: [
+        opt("doctor", "Le médecin ou consultant", "The doctor or consultant"),
+        opt("vitals", "La personne qui prend les constantes", "The person who takes vitals"),
+        opt("reception", "L'accueil", "Reception"),
+        opt("shop", "La boutique", "The shop"),
+        opt("cashier", "La caisse", "The cashier"),
+        opt("manager", "La direction", "Management"),
+        opt("all", "Tout le personnel présent", "All staff on duty"),
+        UNK()
+      ]}),
+      q("minor", "long", "Comment accueillez-vous un enfant, ou une personne accompagnée ?", "How do you receive a child, or someone who comes with a companion?"),
+      q("find_return", "multi", "Comment retrouvez-vous une personne qui revient ?", "How do you find someone who returns?", { options: [
+        opt("name", "Par le nom", "By name"),
+        opt("phone", "Par le téléphone", "By phone"),
+        opt("number", "Par le numéro de dossier", "By file number"),
+        opt("book", "En feuilletant le cahier", "By looking through the notebook"),
+        opt("memory", "Le personnel s'en souvient", "Staff remember them"),
+        opt("hard", "C'est souvent difficile", "It is often difficult")
+      ]})
+    ]
+  },
+  {
+    id: "arrival",
+    canSkip: true,
+    fr: { title: "Accueil et rendez-vous", lead: "Pour reproduire le parcours depuis la porte, et savoir si les rendez-vous du site existent vraiment." },
+    en: { title: "Reception and appointments", lead: "To reproduce the path from the door, and to learn whether the website appointments really exist." },
+    questions: [
+      q("reasons", "multi", "Pour quelles raisons une personne vient-elle ?", "Why do people come?", { required: true, options: [
+        opt("buy", "Acheter des produits", "To buy products"),
+        opt("consult", "Consulter", "To consult"),
+        opt("follow", "Venir au suivi", "A follow-up visit"),
+        opt("seminar", "Séminaire ou enseignement", "Seminar or teaching"),
+        opt("pickup", "Récupérer une commande", "To collect an order"),
+        opt("emergency", "Urgence", "Emergency"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("reasons_other", "text", "Autre raison", "Other reason", { showIf: { id: "reasons", includes: "other" } }),
+      q("appointment", "single", "Les rendez-vous existent-ils aujourd'hui ?", "Do appointments exist today?", { frHint: "Le site propose de prendre rendez-vous en ligne.", enHint: "The website offers online booking.", options: [
+        opt("no", "Non, on vient sans rendez-vous", "No, people walk in"),
+        opt("informal", "Oui, par appel ou WhatsApp, sans heure fixe", "Yes, by call or WhatsApp, without a fixed time"),
+        opt("timed", "Oui, avec un jour et une heure", "Yes, with a day and a time"),
+        opt("website", "Oui, y compris sur lfdservice.org", "Yes, including on lfdservice.org"),
+        UNK()
+      ]}),
+      q("book", "multi", "Comment le rendez-vous est-il pris ?", "How is the appointment made?", { showIf: { id: "appointment", equalsAny: ["informal", "timed", "website"] }, options: [
+        opt("desk", "Sur place", "In person"),
+        opt("phone", "Téléphone", "Phone"),
+        opt("whatsapp", "WhatsApp", "WhatsApp"),
+        opt("site", "Sur lfdservice.org", "On lfdservice.org"),
+        opt("facebook", "Facebook", "Facebook")
+      ]}),
+      q("walkin", "single", "Une personne sans rendez-vous est-elle reçue le jour même ?", "Is someone without an appointment seen the same day?", { options: [
+        opt("yes", "Oui, en général", "Yes, usually"),
+        opt("if_time", "Seulement s'il reste de la place", "Only if there is room"),
+        opt("no", "Non, il faut revenir", "No, they must come back"),
+        UNK()
+      ]}),
+      q("steps", "long", "Décrivez le parcours, de l'arrivée jusqu'à la sortie", "Describe the path, from arrival until leaving", { required: true, frHint: "Dans l'ordre. Exemple de forme : accueil, constantes, médecin, boutique, caisse. Écrivez ce qui se passe vraiment.", enHint: "In order. Shape of the answer: reception, vitals, doctor, shop, cashier. Write what really happens." }),
+      q("queue", "single", "Comment l'ordre de passage est-il géré ?", "How is the order of seeing people managed?", { options: [
+        opt("none", "Pas de file formalisée", "No formal queue"),
+        opt("arrival", "Ordre d'arrivée", "Order of arrival"),
+        opt("ticket", "Ticket ou numéro", "Ticket or number"),
+        opt("appointment", "Selon l'heure du rendez-vous", "By appointment time"),
+        opt("urgent", "Les cas pressés passent devant", "Urgent cases go first"),
+        UNK()
+      ]}),
+      q("who_directs", "single", "Qui oriente vers la boutique seule, ou vers les constantes puis le médecin ?", "Who directs someone to the shop only, or to vitals and then the doctor?", { options: [
+        opt("reception", "L'accueil", "Reception"),
+        opt("self", "La personne elle-même", "The person themselves"),
+        opt("doctor", "Le médecin", "The doctor"),
+        opt("whoever", "Celui qui est libre", "Whoever is free"),
+        UNK()
+      ]}),
+      q("wait", "single", "Temps d'attente habituel avant le médecin", "Usual wait before seeing the doctor", { options: [
+        opt("lt15", "Moins de 15 minutes", "Under 15 minutes"),
+        opt("15to45", "15 à 45 minutes", "15 to 45 minutes"),
+        opt("1to2", "1 à 2 heures", "1 to 2 hours"),
+        opt("gt2", "Plus de 2 heures", "More than 2 hours"),
+        UNK()
+      ]})
+    ]
+  },
+  {
+    id: "consult",
+    canSkip: true,
+    fr: { title: "Constantes et consultation", lead: "Le parcours décrit au départ est : constantes, puis médecin. Confirmez chaque étape, et ce qui est écrit." },
+    en: { title: "Vitals and consultation", lead: "The path described at the start is: vitals, then the doctor. Confirm each step, and what gets written down." },
+    questions: [
+      q("path", "single", "Le parcours habituel est-il accueil, puis constantes, puis médecin ?", "Is the usual path reception, then vitals, then the doctor?", { required: true, options: [
+        opt("always", "Oui, presque toujours", "Yes, almost always"),
+        opt("often", "Souvent, pas toujours", "Often, not always"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("path_note", "long", "Quand le parcours est différent, que se passe-t-il ?", "When the path is different, what happens?"),
+      q("who_vitals", "multi", "Qui prend les constantes ?", "Who takes the vitals?", { options: [
+        opt("nurse", "Infirmier ou infirmière", "Nurse"),
+        opt("aide", "Aide ou agent", "Assistant"),
+        opt("doctor", "Le médecin", "The doctor"),
+        opt("reception", "L'accueil", "Reception"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("who_vitals_other", "text", "Autre personne", "Other person", { showIf: { id: "who_vitals", includes: "other" } }),
+      q("where_vitals", "text", "Dans quelle pièce, ou à quel poste ?", "In which room, or at which station?"),
+      q("which_vitals", "multi", "Quelles constantes sont prises ?", "Which vitals are taken?", { options: [
+        opt("bp", "Tension", "Blood pressure"),
+        opt("pulse", "Pouls", "Pulse"),
+        opt("temp", "Température", "Temperature"),
+        opt("weight", "Poids", "Weight"),
+        opt("height", "Taille", "Height"),
+        opt("bmi", "IMC", "BMI"),
+        opt("waist", "Tour de taille", "Waist"),
+        opt("glucose", "Glycémie", "Blood glucose"),
+        opt("spo2", "Saturation (oxymètre)", "Oxygen saturation"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("which_vitals_other", "text", "Autre constante", "Other vital", { showIf: { id: "which_vitals", includes: "other" } }),
+      q("glucose_when", "single", "La glycémie est prise pour qui ?", "For whom is blood glucose taken?", { options: [
+        opt("all", "Tout le monde", "Everyone"),
+        opt("some", "Seulement certaines personnes", "Only some people"),
+        opt("none", "On ne la prend pas", "It is not taken"),
+        UNK()
+      ]}),
+      q("vitals_written", "multi", "Où les constantes sont-elles écrites avant le médecin ?", "Where are vitals written before the doctor?", { options: [
+        opt("sheet", "Fiche du bénéficiaire", "Beneficiary sheet"),
+        opt("book", "Cahier des constantes", "Vitals notebook"),
+        opt("phone", "Téléphone", "Phone"),
+        opt("told", "Dites à l'oral seulement", "Said aloud only"),
+        opt("nowhere", "Elles ne sont pas gardées", "They are not kept")
+      ]}),
+      q("doctor_sees", "single", "Le médecin voit-il les constantes avant de commencer ?", "Does the doctor see the vitals before starting?", { options: [
+        opt("always", "Oui, toujours", "Yes, always"),
+        opt("often", "Souvent", "Often"),
+        opt("rare", "Rarement", "Rarely"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("who_consults", "multi", "Qui reçoit en consultation ?", "Who sees the person in consultation?", { options: [
+        opt("doctor", "Médecin", "Doctor"),
+        opt("nutrition", "Conseiller en alimentation", "Food counsellor"),
+        opt("nurse", "Infirmier", "Nurse"),
+        opt("leader", "Responsable du centre", "Centre leader"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("who_consults_other", "text", "Autre consultant", "Other consultant", { showIf: { id: "who_consults", includes: "other" } }),
+      q("consult_types", "multi", "Quels types de consultation existent ?", "Which consultation types exist?", { options: [
+        opt("first", "Première visite", "First visit"),
+        opt("follow", "Suivi", "Follow-up"),
+        opt("chronic", "Maladie de longue durée", "Long-term condition"),
+        opt("food", "Alimentation vivante / nutrition", "Living food / nutrition"),
+        opt("mouth", "Bouche, dents, soin buccal", "Mouth, teeth, oral care"),
+        opt("urgent", "Cas pressé", "Urgent case"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("consult_types_other", "text", "Autre type", "Other type", { showIf: { id: "consult_types", includes: "other" } }),
+      q("doctor_writes", "multi", "Qu'est-ce qui est écrit pendant la consultation ?", "What is written during the consultation?", { options: [
+        opt("complaint", "La plainte du jour", "Today's complaint"),
+        opt("history", "L'histoire et les habitudes", "History and habits"),
+        opt("food", "L'alimentation", "Food"),
+        opt("diagnosis", "Un diagnostic ou un nom de problème", "A diagnosis or problem name"),
+        opt("plan", "Le plan à suivre", "The plan to follow"),
+        opt("products", "Les produits LFD recommandés", "Recommended LFD products"),
+        opt("tests", "Des examens à faire ailleurs", "Tests to do elsewhere"),
+        opt("return", "La date de retour", "The return date"),
+        opt("advice", "Un conseil ou un enseignement", "Advice or teaching"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("doctor_writes_other", "text", "Autre élément écrit", "Other written item", { showIf: { id: "doctor_writes", includes: "other" } }),
+      q("diagnosis_style", "single", "Comment le problème est-il nommé ?", "How is the problem named?", { options: [
+        opt("words", "En mots simples, sans code", "In plain words, no code"),
+        opt("diagnosis", "Avec un diagnostic médical", "With a medical diagnosis"),
+        opt("food_only", "Surtout par un plan alimentaire", "Mainly with a food plan"),
+        opt("none", "On ne le note pas", "It is not written"),
+        UNK()
+      ]}),
+      q("products_recommended", "single", "Le consultant recommande-t-il des produits LFD ?", "Does the consultant recommend LFD products?", { options: [
+        opt("always", "Presque toujours", "Almost always"),
+        opt("often", "Souvent", "Often"),
+        opt("sometimes", "Parfois", "Sometimes"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("must_buy", "single", "L'achat des produits fait-il partie obligatoire de la consultation ?", "Is buying products a required part of the consultation?", { options: [
+        opt("no", "Non, la personne choisit", "No, the person chooses"),
+        opt("expected", "C'est attendu, sans obligation écrite", "It is expected, without a written rule"),
+        opt("yes", "Oui", "Yes"),
+        UNK()
+      ]}),
+      q("referral", "long", "Dans quels cas envoyez-vous la personne vers un hôpital, un laboratoire ou une pharmacie extérieure ?", "In which cases do you send the person to a hospital, a laboratory, or an outside pharmacy?"),
+      q("duration", "single", "Durée habituelle d'une consultation", "Usual length of a consultation", { options: [
+        opt("lt15", "Moins de 15 minutes", "Under 15 minutes"),
+        opt("15to30", "15 à 30 minutes", "15 to 30 minutes"),
+        opt("30to60", "30 à 60 minutes", "30 to 60 minutes"),
+        opt("gt60", "Plus d'une heure", "More than an hour"),
+        UNK()
+      ]}),
+      q("fee", "long", "Prix en FCFA de la consultation et des constantes. Sont-ils séparés ?", "Price in FCFA of the consultation and of the vitals. Are they separate?"),
+      q("followup", "multi", "Comment le suivi est-il fait après la visite ?", "How is follow-up done after the visit?", { options: [
+        opt("date", "Une date de retour est donnée", "A return date is given"),
+        opt("whatsapp", "WhatsApp", "WhatsApp"),
+        opt("call", "Appel", "Phone call"),
+        opt("seminar", "Par le séminaire", "Through the seminar"),
+        opt("none", "La personne revient si elle veut", "The person returns if they want"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("followup_other", "text", "Autre suivi", "Other follow-up", { showIf: { id: "followup", includes: "other" } }),
+      q("no_show", "long", "Que se passe-t-il si la personne ne revient pas à la date prévue ?", "What happens if the person does not come back on the planned date?")
+    ]
+  },
+  {
+    id: "shop",
+    canSkip: true,
+    fr: { title: "Boutique des produits", lead: "La boutique et la consultation doivent pouvoir se parler. Décrivez le stock, les prix et la vente." },
+    en: { title: "Product shop", lead: "The shop and the consultation need to be able to talk to each other. Describe stock, prices, and sales." },
+    questions: [
+      q("same_stock", "single", "La boutique en ligne et le centre utilisent-ils le même stock et la même caisse ?", "Do the online shop and the centre use the same stock and the same cash desk?", { required: true, options: [
+        opt("same", "Oui, tout est ensemble", "Yes, everything is together"),
+        opt("stock_only", "Même stock, caisses différentes", "Same stock, different cash desks"),
+        opt("separate", "Stocks et caisses séparés", "Separate stock and cash desks"),
+        UNK()
+      ]}),
+      q("channels", "multi", "Où un produit est-il vendu ?", "Where is a product sold?", { options: [
+        opt("counter", "Comptoir du centre", "Centre counter"),
+        opt("site", "lfdstableproductshop.com", "lfdstableproductshop.com"),
+        opt("whatsapp", "WhatsApp", "WhatsApp"),
+        opt("delivery", "Livraison", "Delivery"),
+        opt("seminar", "Pendant un séminaire", "During a seminar"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("channels_other", "text", "Autre canal", "Other channel", { showIf: { id: "channels", includes: "other" } }),
+      q("web_account", "single", "Le site a un bouton « Se connecter ». À quoi sert le compte ?", "The site has a “Log in” button. What is the account for?", { options: [
+        opt("unused", "Il ne sert pas vraiment", "It is not really used"),
+        opt("orders", "Pour suivre les commandes", "To follow orders"),
+        opt("prices", "Pour voir des prix réservés", "To see special prices"),
+        opt("unknown_use", "Je ne sais pas à quoi il sert", "I don't know what it is for"),
+        UNK()
+      ]}),
+      q("products", "multi", "Quels produits sont vraiment en vente aujourd'hui ?", "Which products are really on sale today?", { options: [
+        opt("chips_box", "Chips Vital, boîte moyenne", "Vital Chips, medium box"),
+        opt("chips_200", "Chips Vital, 200 g", "Vital Chips, 200 g"),
+        opt("buccal", "Vital Buccal Care", "Vital Buccal Care"),
+        opt("food", "Vital Food", "Vital Food"),
+        opt("fufu", "Vital Fufu", "Vital Fufu"),
+        opt("drink", "Exotic Natural Drink", "Exotic Natural Drink"),
+        opt("living", "Living Food", "Living Food"),
+        opt("cacao", "Vital Cacao Butter", "Vital Cacao Butter"),
+        opt("coco", "Vital Coco Oil", "Vital Coco Oil"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("products_other", "long", "Autres produits, avec le prix en FCFA si vous le connaissez", "Other products, with the price in FCFA if you know it", { showIf: { id: "products", includes: "other" } }),
+      q("prices_correct", "single", "Ces prix de la boutique en ligne sont-ils encore justes : Chips Vital boîte 1 000 FCFA, 200 g 5 000 FCFA, Vital Buccal Care 15 000 FCFA ?", "Are these online shop prices still right: Vital Chips box 1,000 FCFA, 200 g 5,000 FCFA, Vital Buccal Care 15,000 FCFA?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("no", "Non, ils ont changé", "No, they have changed"),
+        opt("some", "Seulement une partie", "Only some of them"),
+        UNK()
+      ]}),
+      q("price_note", "long", "Prix actuels qui diffèrent, et qui a le droit de les changer", "Current prices that differ, and who is allowed to change them"),
+      q("units", "multi", "Comment un produit est-il vendu ?", "How is a product sold?", { options: [
+        opt("piece", "À la pièce", "By piece"),
+        opt("box", "À la boîte", "By box"),
+        opt("weight", "Au poids", "By weight"),
+        opt("cure", "En cure (semaine ou mois)", "As a course (week or month)"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("without_consult", "single", "Peut-on acheter sans avoir consulté ?", "Can someone buy without a consultation?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("some", "Certains produits seulement", "Some products only"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("consult_to_sale", "single", "Une recommandation du consultant devient-elle une vente ?", "Does a consultant's recommendation become a sale?", { options: [
+        opt("paper", "Oui, avec un papier que la boutique lit", "Yes, with a paper the shop reads"),
+        opt("oral", "Oui, dit à l'oral", "Yes, said aloud"),
+        opt("person", "La personne choisit elle-même à la boutique", "The person chooses at the shop"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("discount", "long", "Y a-t-il des réductions, du crédit, des dons, ou des produits offerts ? Pour qui ?", "Are there discounts, credit, gifts, or free products? For whom?"),
+      q("stock_method", "multi", "Comment le stock est-il compté ?", "How is stock counted?", { options: [
+        opt("eye", "À l'œil, sur les étagères", "By looking at the shelves"),
+        opt("book", "Cahier d'entrées et de sorties", "In-and-out notebook"),
+        opt("excel", "Excel", "Excel"),
+        opt("site", "Le site de la boutique", "The shop website"),
+        opt("none", "On ne compte pas vraiment", "It is not really counted")
+      ]}),
+      q("expiry", "single", "Suivez-vous les dates de péremption ou les lots ?", "Do you track expiry dates or batches?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("no", "Non", "No"),
+        opt("some", "Pour certains produits", "For some products"),
+        UNK()
+      ]}),
+      q("make", "single", "D'où viennent les produits ?", "Where do the products come from?", { options: [
+        opt("make", "LFD les fabrique", "LFD makes them"),
+        opt("buy", "LFD les achète", "LFD buys them"),
+        opt("both", "Les deux", "Both"),
+        UNK()
+      ]}),
+      q("make_note", "long", "Où sont-ils fabriqués ou achetés, et qui réceptionne une livraison ?", "Where are they made or bought, and who receives a delivery?"),
+      q("low_stock", "long", "Comment savez-vous qu'un produit manque, et qui décide d'en refaire ou d'en racheter ?", "How do you know a product is running out, and who decides to make or buy more?"),
+      q("delivery", "long", "Livraison : quelles zones, quel prix, et qui encaisse ?", "Delivery: which areas, what price, and who collects the money?"),
+      q("returns", "long", "Que faites-vous d'un produit retourné, périmé ou abîmé ?", "What do you do with a returned, expired, or damaged product?")
+    ]
+  },
+  {
+    id: "seminars",
+    canSkip: true,
+    fr: { title: "Séminaires", lead: "Le site affiche trois formules. Dites si elles existent, et si elles donnent droit à une consultation ou à des produits." },
+    en: { title: "Seminars", lead: "The website shows three plans. Say whether they exist, and whether they include a consultation or products." },
+    questions: [
+      q("plans_real", "single", "Les formules 3 000 FCFA par semaine, 10 000 par mois et 100 000 par an sont-elles proposées aujourd'hui ?", "Are the plans of 3,000 FCFA a week, 10,000 a month, and 100,000 a year offered today?", { required: true, options: [
+        opt("yes", "Oui, les trois", "Yes, all three"),
+        opt("some", "Seulement certaines", "Only some of them"),
+        opt("other_price", "Il y a des séminaires, à d'autres prix", "There are seminars, at other prices"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("plans_note", "long", "Que reçoit la personne : présence, vidéos, produits, consultation, autre ?", "What does the person receive: attendance, videos, products, a consultation, something else?"),
+      q("file_link", "single", "L'abonné a-t-il aussi un dossier de bénéficiaire ?", "Does the subscriber also have a beneficiary file?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("no", "Non", "No"),
+        opt("if_consult", "Seulement s'il consulte", "Only if they consult"),
+        UNK()
+      ]}),
+      q("pay_track", "long", "Comment le paiement est-il suivi, et que se passe-t-il si la personne arrête ?", "How is payment tracked, and what happens if the person stops?"),
+      q("other_programmes", "long", "Autres programmes : groupes, églises, entreprises, journées spéciales", "Other programmes: groups, churches, companies, special days")
+    ]
+  },
+  {
+    id: "hospital",
+    canSkip: true,
+    fr: { title: "Services de type hôpital", lead: "Pour chaque service, dites s'il existe aujourd'hui, s'il est prévu, ou s'il ne vous concerne pas. Le système ne doit contenir que ce que LFD fait ou prépare." },
+    en: { title: "Hospital-type services", lead: "For each service, say whether it exists today, is planned, or does not apply. The system should contain only what LFD does or is preparing." },
+    questions: [
+      q("website_true", "long", "Le site lfdservice.org parle d'urgences, de nombreuses spécialités et de chambres. Qu'est-ce qui est vrai, prévu, ou sans rapport avec LFD ?", "lfdservice.org mentions emergency care, many specialties, and rooms. What is true, planned, or unrelated to LFD?", { required: true }),
+      svc("lab", "Analyses de laboratoire sur place", "Laboratory tests on site"),
+      svc("imaging", "Radio, échographie ou imagerie", "X-ray, ultrasound, or imaging"),
+      svc("pharmacy", "Pharmacie de médicaments, distincte de la boutique de produits naturels", "A medicines pharmacy, separate from the natural-product shop"),
+      svc("beds", "Chambres ou lits pour passer la nuit", "Rooms or beds for overnight stays"),
+      svc("observation", "Salle d'observation pour quelques heures", "An observation room for a few hours"),
+      svc("procedures", "Petits gestes ou pansements", "Small procedures or dressings"),
+      svc("dental", "Soins des dents, au-delà du produit buccal", "Dental care, beyond the oral product"),
+      svc("maternity", "Suivi de grossesse ou accouchement", "Pregnancy care or delivery"),
+      svc("immunisation", "Vaccination", "Immunisation"),
+      svc("insurance", "Assurance, mutuelle ou prise en charge par une entreprise", "Insurance, mutual fund, or company cover"),
+      svc("referral_in", "Des hôpitaux vous envoient des personnes", "Hospitals send people to you"),
+      q("service_notes", "long", "Pour chaque service qui existe ou qui est prévu, décrivez en quelques lignes qui le fait et comment on le note", "For each service that exists or is planned, describe in a few lines who does it and how it is recorded")
+    ]
+  },
+  {
+    id: "money",
+    canSkip: true,
+    fr: { title: "Argent", lead: "La caisse doit suivre la consultation, la boutique, les séminaires et les dettes, en FCFA." },
+    en: { title: "Money", lead: "The cash desk needs to follow consultations, the shop, seminars, and debts, in FCFA." },
+    questions: [
+      q("who_pays", "multi", "Qui paie ?", "Who pays?", { options: [
+        opt("person", "Le bénéficiaire", "The beneficiary"),
+        opt("family", "La famille", "The family"),
+        opt("group", "Une église ou un groupe", "A church or a group"),
+        opt("company", "Une entreprise", "A company"),
+        opt("lfd", "LFD prend parfois en charge", "LFD sometimes covers it"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("methods", "multi", "Quels moyens de paiement acceptez-vous ?", "Which payment methods do you accept?", { required: true, options: [
+        opt("cash", "Espèces", "Cash"),
+        opt("mtn", "MTN Mobile Money", "MTN Mobile Money"),
+        opt("orange", "Orange Money", "Orange Money"),
+        opt("card", "Carte bancaire", "Bank card"),
+        opt("transfer", "Virement", "Bank transfer"),
+        opt("credit", "Crédit, payer plus tard", "Credit, pay later"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("methods_other", "text", "Autre moyen", "Other method", { showIf: { id: "methods", includes: "other" } }),
+      q("when_pay", "multi", "À quel moment l'argent est-il encaissé ?", "When is the money collected?", { options: [
+        opt("before", "Avant les constantes", "Before vitals"),
+        opt("after", "Après le médecin", "After the doctor"),
+        opt("shop", "À la boutique, au moment du produit", "At the shop, when the product is taken"),
+        opt("delivery", "À la livraison", "On delivery"),
+        opt("later", "Plus tard", "Later"),
+        UNK()
+      ]}),
+      q("receipt", "single", "Quel reçu est donné ?", "What receipt is given?", { options: [
+        opt("none", "Aucun", "None"),
+        opt("book", "Une ligne dans un cahier", "A line in a notebook"),
+        opt("stub", "Un carnet à souche", "A receipt book"),
+        opt("whatsapp", "Un message WhatsApp", "A WhatsApp message"),
+        opt("printed", "Un reçu imprimé ou du site", "A printed or website receipt"),
+        UNK()
+      ]}),
+      q("daily_close", "long", "Comment la caisse est-elle comptée à la fin du jour, et qui le fait ?", "How is the cash counted at the end of the day, and who does it?"),
+      q("price_list", "single", "Où se trouve la liste des prix ?", "Where is the price list?", { options: [
+        opt("head", "Dans la tête du personnel", "In staff memory"),
+        opt("paper", "Sur une feuille affichée", "On a posted sheet"),
+        opt("book", "Dans un cahier", "In a notebook"),
+        opt("site", "Sur le site", "On the website"),
+        opt("none", "Il n'y a pas de liste fixe", "There is no fixed list"),
+        UNK()
+      ]}),
+      q("debt", "single", "Suivez-vous les dettes et les acomptes ?", "Do you track debts and deposits?", { options: [
+        opt("no", "Non", "No"),
+        opt("book", "Oui, dans un cahier", "Yes, in a notebook"),
+        opt("memory", "Oui, de mémoire", "Yes, from memory"),
+        opt("planned", "On voudrait le faire", "We would like to"),
+        UNK()
+      ]}),
+      q("debt_how", "long", "Comment une dette est-elle réclamée, et qui peut l'effacer ?", "How is a debt collected, and who can cancel it?", { showIf: { id: "debt", equalsAny: ["book", "memory", "planned"] } }),
+      q("who_sees_money", "multi", "Qui a le droit de voir les recettes ?", "Who may see the takings?", { options: [
+        opt("cashier", "Le caissier", "The cashier"),
+        opt("shop", "La boutique", "The shop"),
+        opt("doctor", "Le médecin", "The doctor"),
+        opt("manager", "La direction seulement", "Management only"),
+        opt("all", "Tout le personnel", "All staff")
+      ]})
+    ]
+  },
+  {
+    id: "team",
+    canSkip: true,
+    fr: { title: "Équipe et accès", lead: "Chaque fonction ne doit voir que ce dont elle a besoin." },
+    en: { title: "Team and access", lead: "Each role should see only what it needs." },
+    questions: [
+      q("roles_counts", "long", "Listez les fonctions réelles et le nombre de personnes", "List the real roles and how many people", { required: true, frHint: "Exemple : accueil 2, constantes 1, consultant 1, boutique 2.", enHint: "Example: reception 2, vitals 1, consultant 1, shop 2." }),
+      q("shifts", "long", "Y a-t-il des équipes ou des jours différents selon les personnes ?", "Are there shifts, or different days for different people?"),
+      q("access", "long", "Pour chaque fonction, que doit-elle pouvoir faire dans le système, et que ne doit-elle pas voir ?", "For each role, what should it be able to do in the system, and what should it not see?", { frHint: "Accueil, constantes, consultant, boutique, caisse, stock, direction.", enHint: "Reception, vitals, consultant, shop, cashier, stock, management." }),
+      q("devices", "multi", "Sur quoi le personnel travaillera-t-il ?", "What will staff work on?", { options: [
+        opt("phone", "Téléphone", "Phone"),
+        opt("computer", "Ordinateur", "Computer"),
+        opt("both", "Les deux", "Both"),
+        opt("paper", "Papier seulement, pour l'instant", "Paper only, for now")
+      ]}),
+      q("internet", "single", "Comment est internet au centre ?", "What is the internet like at the centre?", { options: [
+        opt("stable", "Stable", "Stable"),
+        opt("cuts", "Ça coupe souvent", "It often drops"),
+        opt("phone_only", "Surtout via le téléphone", "Mostly through the phone"),
+        opt("none", "Peu ou pas d'internet", "Little or no internet"),
+        UNK()
+      ]})
+    ]
+  },
+  {
+    id: "system",
+    fr: { title: "Le système à construire", lead: "Dites ce qui doit marcher le premier jour, et ce qui peut attendre. C'est cette partie qui fixe l'ordre de construction." },
+    en: { title: "The system to build", lead: "Say what must work on day one, and what can wait. This part sets the build order." },
+    questions: [
+      q("tools", "multi", "Quels outils utilisez-vous aujourd'hui ?", "Which tools do you use today?", { required: true, options: [
+        opt("paper", "Fiches papier", "Paper forms"),
+        opt("book", "Cahiers", "Notebooks"),
+        opt("excel", "Excel", "Excel"),
+        opt("whatsapp", "WhatsApp", "WhatsApp"),
+        opt("shop_site", "Boutique en ligne", "Online shop"),
+        opt("clinic_site", "lfdservice.org", "lfdservice.org"),
+        opt("none", "Aucun outil fixé", "No fixed tool"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("tools_other", "text", "Autre outil", "Other tool", { showIf: { id: "tools", includes: "other" } }),
+      q("must_not_lose", "long", "Quelles informations ne doivent jamais se perdre ?", "Which information must never be lost?"),
+      q("pains", "long", "Quels sont les trois plus gros problèmes du quotidien ?", "What are the three biggest day-to-day problems?", { required: true }),
+      q("reports", "multi", "Quels rapports la direction veut-elle ?", "Which reports does management want?", { options: [
+        opt("visits", "Visites par jour", "Visits per day"),
+        opt("new", "Nouveaux bénéficiaires", "New beneficiaries"),
+        opt("sales", "Ventes de produits", "Product sales"),
+        opt("stock", "Stock restant", "Stock left"),
+        opt("income", "Recettes", "Income"),
+        opt("debt", "Dettes", "Debts"),
+        opt("late", "Suivis en retard", "Overdue follow-ups"),
+        opt("seminar", "Séminaires", "Seminars"),
+        opt("other", "Autre", "Other")
+      ]}),
+      q("reports_other", "text", "Autre rapport", "Other report", { showIf: { id: "reports", includes: "other" } }),
+      q("priority", "multi", "Qu'est-ce qui doit marcher le premier jour ?", "What must work on day one?", { required: true, frHint: "Cochez seulement le nécessaire pour ouvrir le centre avec le système.", enHint: "Tick only what is needed to open the centre with the system.", options: dayOne() }),
+      q("later", "multi", "Qu'est-ce qui peut attendre une deuxième étape ?", "What can wait for a second stage?", { options: dayOne() }),
+      q("ui_lang", "single", "Langue des écrans", "Language of the screens", { options: [
+        opt("fr", "Français", "French"),
+        opt("en", "Anglais", "English"),
+        opt("both", "Les deux", "Both"),
+        UNK()
+      ]}),
+      q("word_beneficiary", "single", "Le système doit-il dire « bénéficiaire » ?", "Should the system say “beneficiary”?", { options: [
+        opt("yes", "Oui, bénéficiaire", "Yes, beneficiary"),
+        opt("patient", "Non, patient", "No, patient"),
+        opt("both", "Les deux, selon l'écran", "Both, depending on the screen"),
+        opt("other", "Un autre mot", "Another word")
+      ]}),
+      q("word_other", "text", "Quel mot ?", "Which word?", { showIf: { id: "word_beneficiary", equals: "other" } }),
+      q("offline", "single", "Le système doit-il continuer quand internet coupe ?", "Should the system keep working when the internet drops?", { options: [
+        opt("yes", "Oui, c'est indispensable", "Yes, it is essential"),
+        opt("useful", "Utile, pas bloquant", "Useful, not essential"),
+        opt("no", "Non, internet suffit", "No, internet is enough"),
+        UNK()
+      ]}),
+      q("paper", "single", "Faut-il encore une fiche papier en plus de l'écran ?", "Do you still need a paper sheet as well as the screen?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("transition", "Oui, le temps de la transition", "Yes, during the changeover"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("card", "single", "Une carte ou un numéro à présenter au retour serait-il utile ?", "Would a card or a number to show on return be useful?", { options: [
+        opt("yes", "Oui", "Yes"),
+        opt("number_only", "Un numéro suffit, sans carte", "A number is enough, no card"),
+        opt("no", "Non", "No"),
+        UNK()
+      ]}),
+      q("success", "long", "Dans six mois, qu'est-ce qui vous ferait dire que le système a réussi ?", "In six months, what would make you say the system has succeeded?", { required: true })
+    ]
+  },
+  {
+    id: "examples",
+    canSkip: true,
+    fr: { title: "Deux exemples", lead: "Racontez le déroulement, sans nom ni téléphone d'une personne réelle. Ces récits servent à vérifier que le système suit le vrai parcours." },
+    en: { title: "Two examples", lead: "Tell the sequence, without a real person's name or phone number. These stories check that the system follows the real path." },
+    questions: [
+      q("ex_consult", "long", "Une venue pour consultation, de l'arrivée au départ", "One consultation visit, from arrival to leaving", { frHint: "Accueil, constantes, médecin, produits, paiement, suite donnée.", enHint: "Reception, vitals, doctor, products, payment, what happened next." }),
+      q("ex_shop", "long", "Une vente à la boutique, sans consultation", "One shop sale, without a consultation"),
+      q("reviewer", "text", "Qui relira le dessin du système ? Nom, fonction, WhatsApp", "Who will review the system design? Name, role, WhatsApp")
+    ]
+  }
+];
+
+function q(id, type, fr, en, extra = {}) {
+  return {
+    id, type,
+    required: !!extra.required,
+    compact: !!extra.compact,
+    showIf: extra.showIf,
+    options: extra.options,
+    fr: { label: fr, hint: extra.frHint || "" },
+    en: { label: en, hint: extra.enHint || "" }
+  };
+}
+function ranges() {
+  return [
+    opt("lt10", "Moins de 10", "Fewer than 10"),
+    opt("10to30", "10 à 30", "10 to 30"),
+    opt("30to80", "30 à 80", "30 to 80"),
+    opt("gt80", "Plus de 80", "More than 80"),
+    UNK()
+  ];
+}
+function dayOne() {
+  return [
+    opt("file", "Dossier du bénéficiaire", "Beneficiary file"),
+    opt("visit", "Accueil et passage du jour", "Reception and today's visit"),
+    opt("appointment", "Rendez-vous", "Appointments"),
+    opt("vitals", "Constantes", "Vitals"),
+    opt("consult", "Notes de consultation", "Consultation notes"),
+    opt("products", "Produits recommandés", "Recommended products"),
+    opt("cashier", "Caisse", "Cash desk"),
+    opt("stock", "Stock de la boutique", "Shop stock"),
+    opt("seminar", "Séminaires", "Seminars"),
+    opt("reports", "Rapports", "Reports")
+  ];
+}
+function svc(id, fr, en) {
+  return q(id, "single", fr, en, {
+    compact: true,
+    options: [
+      opt("now", "Déjà en place", "Already in place"),
+      opt("planned", "Prévu", "Planned"),
+      opt("no", "Ça ne nous concerne pas", "This does not apply"),
+      UNK()
+    ]
+  });
+}
+
+const state = load();
+const stage = document.getElementById("stage");
+const nav = document.getElementById("nav");
+
+document.getElementById("lang-fr").onclick = () => setLang("fr");
+document.getElementById("lang-en").onclick = () => setLang("en");
+
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("lfd-q-v1") || "null");
+    if (saved && saved.version === VERSION) return saved;
+  } catch (e) {}
+  return { version: VERSION, lang: "fr", screen: "start", answers: {}, consent: false, startedAt: Date.now() };
+}
+function save() {
+  localStorage.setItem("lfd-q-v1", JSON.stringify(state));
+}
+function setLang(lang) {
+  state.lang = lang;
+  save();
+  render();
+}
+function t() { return T[state.lang]; }
+function tx(bag) { return bag[state.lang] || bag.fr; }
+function visible(question) {
+  const rule = question.showIf;
+  if (!rule) return true;
+  const value = state.answers[rule.id];
+  if (rule.equals != null) return value === rule.equals;
+  if (rule.includes) return Array.isArray(value) && value.includes(rule.includes);
+  if (rule.equalsAny) return rule.equalsAny.includes(value);
+  return true;
+}
+function skipped(section) {
+  return !!state.answers["skip_" + section.id];
+}
+function optionLabel(question, value, lang) {
+  const found = (question.options || []).find(item => item.value === value);
+  if (!found) return value || "";
+  return found[lang] || found.fr;
+}
+function answerText(question, lang) {
+  const value = state.answers[question.id];
+  if (value == null || value === "" || (Array.isArray(value) && value.length === 0)) return "";
+  if (Array.isArray(value)) return value.map(item => optionLabel(question, item, lang)).join(" ; ");
+  if (question.options) return optionLabel(question, value, lang);
+  return String(value);
+}
+function sectionError(section) {
+  if (skipped(section)) return null;
+  for (const question of section.questions) {
+    if (!question.required || !visible(question)) continue;
+    const value = state.answers[question.id];
+    const missing = question.type === "multi" ? !value || value.length === 0 : !String(value || "").trim();
+    if (missing) return question.id;
+  }
+  return null;
+}
+
+function render(scroll) {
+  document.documentElement.lang = state.lang;
+  document.getElementById("tagline").textContent = t().tagline;
+  document.getElementById("foot").textContent = t().foot;
+  document.getElementById("lang-fr").classList.toggle("on", state.lang === "fr");
+  document.getElementById("lang-en").classList.toggle("on", state.lang === "en");
+  renderNav();
+  stage.innerHTML = "";
+  if (state.screen === "start") renderStart();
+  else if (state.screen === "review") renderReview();
+  else if (state.screen === "thanks") renderThanks();
+  else renderSection(SECTIONS[state.screen]);
+  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function renderNav() {
+  nav.innerHTML = "";
+  const items = [{ id: "start", label: state.lang === "fr" ? "Introduction" : "Introduction" }]
+    .concat(SECTIONS.map((section, index) => ({ id: index, label: tx(section).title })))
+    .concat([{ id: "review", label: state.lang === "fr" ? "Envoi" : "Send" }]);
+  items.forEach(item => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = item.label;
+    const current = (item.id === "start" && state.screen === "start")
+      || (item.id === "review" && (state.screen === "review" || state.screen === "thanks"))
+      || item.id === state.screen;
+    button.classList.toggle("on", current);
+    button.onclick = () => {
+      if (item.id === "start") state.screen = "start";
+      else if (item.id === "review") state.screen = "review";
+      else state.screen = item.id;
+      save();
+      render();
+    };
+    nav.appendChild(button);
+  });
+}
+function renderStart() {
+  const copy = t();
+  stage.appendChild(p("kicker", copy.startKicker));
+  stage.appendChild(h("h1", copy.startTitle));
+  stage.appendChild(p("lead", copy.startLead));
+  const seen = document.createElement("div");
+  seen.className = "note";
+  seen.appendChild(h("h3", copy.seenTitle));
+  seen.appendChild(p("", copy.seen));
+  stage.appendChild(seen);
+  const privacy = document.createElement("div");
+  privacy.className = "note warn";
+  privacy.textContent = copy.privacy;
+  stage.appendChild(privacy);
+  if (Object.keys(state.answers).length) {
+    const banner = document.createElement("div");
+    banner.className = "banner";
+    banner.textContent = copy.draft;
+    stage.appendChild(banner);
+    const row = document.createElement("div");
+    row.className = "row";
+    row.appendChild(button(copy.restart, "ghost", reset));
+    row.appendChild(button(copy.continue, "primary", () => go(0)));
+    stage.appendChild(row);
+  } else {
+    stage.appendChild(button(copy.begin, "primary", () => go(0)));
+  }
+}
+function renderSection(section) {
+  const copy = t();
+  const index = SECTIONS.indexOf(section);
+  stage.appendChild(p("kicker", copy.step + " " + (index + 1) + " " + copy.of + " " + SECTIONS.length));
+  const bar = document.createElement("div");
+  bar.className = "progress";
+  const fill = document.createElement("span");
+  fill.style.width = ((index + 1) / SECTIONS.length * 100) + "%";
+  bar.appendChild(fill);
+  stage.appendChild(bar);
+  stage.appendChild(h("h2", tx(section).title));
+  stage.appendChild(p("lead", tx(section).lead));
+  if (section.canSkip) {
+    const label = document.createElement("label");
+    label.className = "skip";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = skipped(section);
+    input.onchange = () => {
+      state.answers["skip_" + section.id] = input.checked;
+      save();
+      render();
+    };
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(copy.skip));
+    stage.appendChild(label);
+  }
+  const wrap = document.createElement("div");
+  wrap.className = "questions" + (skipped(section) ? " is-skipped" : "");
+  if (skipped(section)) wrap.style.opacity = "0.45";
+  section.questions.forEach(question => {
+    if (!visible(question)) return;
+    wrap.appendChild(renderQuestion(question));
+  });
+  stage.appendChild(wrap);
+  const error = document.createElement("div");
+  error.className = "error";
+  error.id = "form-error";
+  if (state.pendingError) {
+    error.textContent = copy.required;
+    const missingId = state.pendingError;
+    state.pendingError = null;
+    setTimeout(() => {
+      const node = document.getElementById("q-" + missingId);
+      if (node) node.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 0);
+  }
+  stage.appendChild(error);
+  const row = document.createElement("div");
+  row.className = "row";
+  row.appendChild(button(copy.back, "ghost", () => go(index === 0 ? "start" : index - 1)));
+  row.appendChild(button(index === SECTIONS.length - 1 ? copy.review : copy.next, "primary", () => {
+    const missing = sectionError(section);
+    if (missing) {
+      error.textContent = copy.required;
+      const node = document.getElementById("q-" + missing);
+      if (node) node.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    go(index === SECTIONS.length - 1 ? "review" : index + 1);
+  }));
+  stage.appendChild(row);
+}
+function renderQuestion(question) {
+  const box = document.createElement("fieldset");
+  box.id = "q-" + question.id;
+  if (question.compact) box.classList.add("compact");
+  const legend = document.createElement("legend");
+  legend.className = "qlabel";
+  legend.textContent = tx(question).label;
+  if (question.required) {
+    const star = document.createElement("span");
+    star.className = "req";
+    star.textContent = " *";
+    legend.appendChild(star);
+  }
+  box.appendChild(legend);
+  if (tx(question).hint) box.appendChild(p("hint", tx(question).hint));
+  const value = state.answers[question.id];
+  if (question.type === "single" || question.type === "multi") {
+    const choices = document.createElement("div");
+    choices.className = "choices";
+    question.options.forEach(option => {
+      const label = document.createElement("label");
+      label.className = "choice";
+      const input = document.createElement("input");
+      input.type = question.type === "multi" ? "checkbox" : "radio";
+      input.name = question.id;
+      input.value = option.value;
+      input.checked = question.type === "multi" ? Array.isArray(value) && value.includes(option.value) : value === option.value;
+      input.onchange = () => {
+        if (question.type === "multi") {
+          const current = new Set(state.answers[question.id] || []);
+          if (input.checked) current.add(option.value); else current.delete(option.value);
+          state.answers[question.id] = Array.from(current);
+        } else state.answers[question.id] = option.value;
+        save();
+        render();
+      };
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(option[state.lang]));
+      choices.appendChild(label);
+    });
+    box.appendChild(choices);
+  } else {
+    const field = question.type === "long" ? document.createElement("textarea") : document.createElement("input");
+    if (question.type !== "long") field.type = question.type === "email" ? "email" : question.type === "tel" ? "tel" : "text";
+    field.value = value || "";
+    field.oninput = () => { state.answers[question.id] = field.value; save(); };
+    box.appendChild(field);
+  }
+  return box;
+}
+function renderReview() {
+  const copy = t();
+  stage.appendChild(p("kicker", copy.review));
+  stage.appendChild(h("h2", copy.review));
+  const review = document.createElement("div");
+  review.className = "review";
+  SECTIONS.forEach((section, index) => {
+    const block = document.createElement("section");
+    const heading = document.createElement("h3");
+    heading.appendChild(document.createTextNode(tx(section).title));
+    const edit = button(copy.edit, "ghost", () => go(index));
+    heading.appendChild(edit);
+    block.appendChild(heading);
+    if (skipped(section)) block.appendChild(p("", copy.skipped));
+    else section.questions.forEach(question => {
+      if (!visible(question)) return;
+      const line = document.createElement("p");
+      const name = document.createElement("b");
+      name.textContent = tx(question).label + " : ";
+      line.appendChild(name);
+      line.appendChild(document.createTextNode(answerText(question, state.lang) || copy.empty));
+      block.appendChild(line);
+    });
+    review.appendChild(block);
+  });
+  stage.appendChild(review);
+  const consent = document.createElement("label");
+  consent.className = "choice";
+  const box = document.createElement("input");
+  box.type = "checkbox";
+  box.checked = state.consent;
+  box.onchange = () => { state.consent = box.checked; save(); };
+  consent.appendChild(box);
+  consent.appendChild(document.createTextNode(copy.consent));
+  stage.appendChild(consent);
+  const error = document.createElement("div");
+  error.className = "error";
+  error.id = "form-error";
+  stage.appendChild(error);
+  const row = document.createElement("div");
+  row.className = "row";
+  row.appendChild(button(copy.back, "ghost", () => go(SECTIONS.length - 1)));
+  const send = button(copy.send, "primary", () => submit(send, error));
+  row.appendChild(send);
+  stage.appendChild(row);
+  const tools = document.createElement("div");
+  tools.className = "row";
+  tools.appendChild(button(copy.download, "ghost", download));
+  tools.appendChild(button(copy.copy, "ghost", () => copySummary(tools)));
+  stage.appendChild(tools);
+}
+function renderThanks() {
+  const copy = t();
+  stage.appendChild(p("kicker", "(LFD) Services"));
+  stage.appendChild(h("h2", copy.thanksTitle));
+  stage.appendChild(p("lead", copy.thanks));
+  const row = document.createElement("div");
+  row.className = "row";
+  row.appendChild(button(copy.download, "ghost", download));
+  row.appendChild(button(copy.copy, "ghost", () => copySummary(row)));
+  stage.appendChild(row);
+}
+function go(screen) {
+  state.screen = screen;
+  save();
+  render(true);
+}
+function reset() {
+  state.answers = {};
+  state.consent = false;
+  state.startedAt = Date.now();
+  state.screen = 0;
+  save();
+  render();
+}
+function button(label, kind, onClick) {
+  const node = document.createElement("button");
+  node.type = "button";
+  node.className = "btn " + kind;
+  node.textContent = label;
+  node.onclick = onClick;
+  return node;
+}
+function h(tag, text) {
+  const node = document.createElement(tag);
+  node.textContent = text;
+  return node;
+}
+function p(className, text) {
+  const node = document.createElement("p");
+  if (className) node.className = className;
+  node.textContent = text;
+  return node;
+}
+function summary() {
+  const lines = [
+    "LFD Services — questionnaire de fonctionnement",
+    "Version " + VERSION,
+    "Langue de saisie : " + state.lang,
+    "Envoyé : " + new Date().toISOString(),
+    ""
+  ];
+  SECTIONS.forEach(section => {
+    lines.push("## " + section.fr.title);
+    if (skipped(section)) lines.push("Partie passée");
+    else section.questions.forEach(question => {
+      if (!visible(question)) return;
+      lines.push(question.fr.label + " : " + (answerText(question, "fr") || "—"));
+    });
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+function download() {
+  const blob = new Blob([summary()], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "lfd-questionnaire.txt";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+function copySummary(host) {
+  navigator.clipboard.writeText(summary()).then(() => {
+    const note = document.createElement("p");
+    note.className = "hint";
+    note.textContent = t().copied;
+    host.after(note);
+  });
+}
+async function submit(send, error) {
+  const copy = t();
+  if (!state.consent) {
+    error.textContent = copy.consentNeed;
+    return;
+  }
+  for (let index = 0; index < SECTIONS.length; index++) {
+    const missing = sectionError(SECTIONS[index]);
+    if (missing) {
+      state.pendingError = missing;
+      state.screen = index;
+      save();
+      render(true);
+      return;
+    }
+  }
+  send.disabled = true;
+  send.textContent = copy.sending;
+  const payload = {
+    _subject: "LFD Services — questionnaire de fonctionnement",
+    _template: "table",
+    _captcha: "false",
+    name: state.answers.name || "",
+    role: state.answers.role || "",
+    email: state.answers.email || "",
+    whatsapp: state.answers.phone || "",
+    message: summary()
+  };
+  try {
+    const response = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json().catch(() => ({}));
+    const message = (data.message || "") + " " + (data.success || "");
+    if (!response.ok || /activation|confirm/i.test(message) || data.success === "false" || data.success === false) {
+      throw new Error(message || "send failed");
+    }
+    state.screen = "thanks";
+    save();
+    render();
+  } catch (err) {
+    send.disabled = false;
+    send.textContent = copy.send;
+    error.textContent = copy.fail;
+    const fallback = button(copy.fallback, "primary", classicSubmit);
+    error.after(fallback);
+  }
+}
+function classicSubmit() {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = CLASSIC;
+  form.target = "_blank";
+  const fields = {
+    _subject: "LFD Services — questionnaire de fonctionnement",
+    _captcha: "false",
+    _template: "table",
+    name: state.answers.name || "",
+    role: state.answers.role || "",
+    email: state.answers.email || "",
+    whatsapp: state.answers.phone || "",
+    message: summary()
+  };
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement("textarea");
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+}
+
+render();
+</script>
+</body>
+</html>
