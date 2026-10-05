@@ -343,7 +343,7 @@ const SECTIONS = [
         opt("youtube", "YouTube", "YouTube"),
         opt("phone", "Appel téléphonique", "Phone call")
       ]}),
-      q("facebook_url", "text", "Lien de la page Facebook, s'il y en a une", "Facebook page link, if there is one"),
+      q("youtube_url", "text", "Lien de la chaîne YouTube, s'il y en a une", "YouTube channel link, if there is one"),
       q("volume", "single", "Combien de personnes viennent un jour ordinaire, boutique et consultation ensemble ?", "On an ordinary day, how many people come, shop and consultation together?", { options: ranges() }),
       q("consults_per_day", "single", "Combien de consultations par jour ?", "How many consultations per day?", { options: ranges() }),
       q("approver", "text", "Qui doit valider le futur système ? Nom et fonction", "Who must approve the future system? Name and role")
@@ -470,7 +470,7 @@ const SECTIONS = [
         opt("phone", "Téléphone", "Phone"),
         opt("whatsapp", "WhatsApp", "WhatsApp"),
         opt("site", "Sur lfdservice.org", "On lfdservice.org"),
-        opt("facebook", "Facebook", "Facebook")
+        opt("youtube", "YouTube", "YouTube")
       ]}),
       q("walkin", "single", "Une personne sans rendez-vous est-elle reçue le jour même ?", "Is someone without an appointment seen the same day?", { options: [
         opt("yes", "Oui, en général", "Yes, usually"),
